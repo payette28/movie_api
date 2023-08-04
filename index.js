@@ -1,39 +1,46 @@
+const mongoose = require('mongoose');
+const Models = require('./models.js');
+mongoose.connect('mongodb://localhost:27017/cfDB', { useNewUrlParser: true, useUnifiedTopology: true });
+const Movies = Models.Movie;
+const Users = Models.User;
+
 const express = require('express');
 bodyParser = require('body-parser'),
-uuid = require('uuid');
+    uuid = require('uuid');
 
 const app = express();
-
+app.use(express.urlencoded({ extended: true }));
+app.use(express.json());
 const morgan = require('morgan');
 
 app.use(bodyParser.json());
 
 let users = [
-   {
-    id: 1,
-    name: 'Noraa',
-    favoriteMovie:[]
-   },
-   {
-    id: 2,
-    name: 'Aaron',
-    favoriteMovie:[]
-   },
-   {
-    id: 3,
-    name: 'Chris',
-    favoriteMovie:[]
-   },
-   {
-    id: 4,
-    name: 'Sam',
-    favoriteMovie:[]
-   },
-   {
-    id: 5,
-    name: 'Diana',
-    favoriteMovie:[]
-   },
+    {
+        id: 1,
+        name: 'Noraa',
+        favoriteMovie: []
+    },
+    {
+        id: 2,
+        name: 'Aaron',
+        favoriteMovie: []
+    },
+    {
+        id: 3,
+        name: 'Chris',
+        favoriteMovie: []
+    },
+    {
+        id: 4,
+        name: 'Sam',
+        favoriteMovie: []
+    },
+    {
+        id: 5,
+        name: 'Diana',
+        favoriteMovie: []
+    },
 ];
 
 const movies = [
@@ -53,11 +60,11 @@ const movies = [
 
     {
         title: 'Avengers: Endgame',
-        description:'After the devastating events of Avengers: Infinity War, the universe is in ruins. With the help of remaining allies, the Avengers assemble once more in order to reverse Thanos actions and restore balance to the universe.',
+        description: 'After the devastating events of Avengers: Infinity War, the universe is in ruins. With the help of remaining allies, the Avengers assemble once more in order to reverse Thanos actions and restore balance to the universe.',
         directors: {
             name: 'Anthony Russo',
             born: 'February 3rd 1970',
-            bio:  'Anthony J. Russo is an American filmmaker and producer who works alongside his brother Joseph Russo.',
+            bio: 'Anthony J. Russo is an American filmmaker and producer who works alongside his brother Joseph Russo.',
         },
         year: '2019',
         genres: {
@@ -92,12 +99,12 @@ const movies = [
     },
     {
         title: 'Star Wars: Episode VII - The Force Awakens',
-        description:'As a new threat to the galaxy rises, Rey, a desert scavenger, and Finn, an ex-stormtrooper, must join Han Solo and Chewbacca to search for the one hope of restoring peace.',
+        description: 'As a new threat to the galaxy rises, Rey, a desert scavenger, and Finn, an ex-stormtrooper, must join Han Solo and Chewbacca to search for the one hope of restoring peace.',
         directors: {
-            name:'J.J Abrams',
-            born:'June 27th, 1966',
-            bio:'Jeffrey Jacob Abrams is an American filmmaker and composer.',
-        },    
+            name: 'J.J Abrams',
+            born: 'June 27th, 1966',
+            bio: 'Jeffrey Jacob Abrams is an American filmmaker and composer.',
+        },
         year: '2015',
         genres: {
             name: 'Sci-Fi',
@@ -109,7 +116,7 @@ const movies = [
         directors: {
             name: 'Anthony Russo',
             born: 'February 3rd 1970',
-            bio:  'Anthony J. Russo is an American filmmaker and producer who works alongside his brother Joseph Russo.',
+            bio: 'Anthony J. Russo is an American filmmaker and producer who works alongside his brother Joseph Russo.',
         },
         year: '2018',
         genres: {
@@ -120,9 +127,9 @@ const movies = [
         title: 'Spider-Man: No Way Home',
         description: 'With Spider-Mans identity now revealed, Peter asks Doctor Strange for help. When a spell goes wrong, dangerous foes from other worlds start to appear, forcing Peter to discover what it truly means to be Spider-Man.',
         directors: {
-            name:'Jon Watts',
-            born:'June 28th, 1981',
-            bio:'Jonathan Watts is an American filmmaker.',
+            name: 'Jon Watts',
+            born: 'June 28th, 1981',
+            bio: 'Jonathan Watts is an American filmmaker.',
         },
         year: '2015',
         genres: {
@@ -131,11 +138,11 @@ const movies = [
     },
     {
         title: 'Jurassic World',
-        description:'A new theme park, built on the original site of Jurassic Park, creates a genetically modified hybrid dinosaur, the Indominus Rex, which escapes containment and goes on a killing spree.',
+        description: 'A new theme park, built on the original site of Jurassic Park, creates a genetically modified hybrid dinosaur, the Indominus Rex, which escapes containment and goes on a killing spree.',
         directors: {
-            name:'Colin Trevorrow',
-            born:'September 13th, 1976',
-            bio:'Colin Trevorrow is an American filmmaker.',
+            name: 'Colin Trevorrow',
+            born: 'September 13th, 1976',
+            bio: 'Colin Trevorrow is an American filmmaker.',
         },
         year: '2015',
         genres: {
@@ -144,11 +151,11 @@ const movies = [
     },
     {
         title: 'The Lion King',
-        description:'After the murder of his father, a young lion prince flees his kingdom only to learn the true meaning of responsibility and bravery.',
+        description: 'After the murder of his father, a young lion prince flees his kingdom only to learn the true meaning of responsibility and bravery.',
         directors: {
-            name:'Jon Favreau',
-            born:'October 19th, 1966',
-            bio:'Jonathan Kolia Favreau is an American filmmaker and actor.',
+            name: 'Jon Favreau',
+            born: 'October 19th, 1966',
+            bio: 'Jonathan Kolia Favreau is an American filmmaker and actor.',
         },
         year: ' 2019',
         genres: {
@@ -157,11 +164,11 @@ const movies = [
     },
     {
         title: 'The Avengers',
-        description:'Earths mightiest heroes must come together and learn to fight as a team if they are going to stop the mischievous Loki and his alien army from enslaving humanity.',
+        description: 'Earths mightiest heroes must come together and learn to fight as a team if they are going to stop the mischievous Loki and his alien army from enslaving humanity.',
         directors: {
-            name:'Joss Whedon',
-            born:'June 23rd, 1964',
-            bio:'Joseph Hill Whedon is an American screenwriter, director, producer and comic book writer.',
+            name: 'Joss Whedon',
+            born: 'June 23rd, 1964',
+            bio: 'Joseph Hill Whedon is an American screenwriter, director, producer and comic book writer.',
         },
         year: ' 2012',
         genres: {
@@ -170,107 +177,141 @@ const movies = [
     },
 ];
 
-app.post('/users/:id/:movieTitle', (req, res) => {
-    const { id, movieTitle } = req.params;
-
-    let user = users.find(user => user.id == id);
-
-    if (user) {
-        user.favoriteMovie.push(movieTitle);
-        res.status(200).send(`${movieTitle} has been added to user's favorites`);
-    } else {
-        res.status(404).send('User not found.')
-    }
-}); 
-
-app.get('/movies/:title', (req, res) => {
-    const { title } = req.params;
-    const movie = movies.find(movie => movie.title === title);
-
-    if (movie) {
-        res.status(200).json(movie); 
-    } else {
-        res.status(404).send('Could not find that movie.');
-    }
+app.post('/users/:userName/movies/:movieTitle', (req, res) => {
+    Users.findOneAndUpdate(
+        { Username: req.params.userName },
+        {
+            $addToSet: { FavoriteMovies: req.params.movieTitle }
+        },
+        { new: true } 
+  )
+    .then((updatedUser) => {
+      if (!updatedUser) {
+        return res.status(404).send("Error: User doesn't exist");
+            } else {
+                res.json(updatedUser);
+            }
+        }
+    );
 });
 
+app.get('/movies/:title', (req, res) => {
+    Movies.findOne({ Title: req.params.title })
+      .then((movies) => {
+        res.status(200).json(movies);
+      })
+      .catch((err) => {
+        console.error(err);
+        res.status(500).send('Error: ' + err);
+      });
+  });
+
 app.delete('/users/:id/:movieTitle', (req, res) => {
-    const { id, movieTitle } = req.params;
-
-    let user = users.find(user => user.id == id);
-
-    if (user) {
-        user.favoriteMovie = user.favoriteMovie.filter(title => title!==movieTitle)
-        res.status(200).send(`${movieTitle} has been removed from user's favorites`);
-    } else {
-        res.status(404).send('User not found.')
-    }
-}); 
+    Users.findOneAndUpdate(
+        { Username: req.params.userName },
+        {
+          $pull: { FavoriteMovies: req.params.movieTitle }
+        },
+        { new: true }
+      )
+        .then((updatedUser) => {
+          if (!updatedUser) {
+            return res.status(404).send("Error: User doesn't exist");
+          } else {
+            res.json(updatedUser);
+          }
+        })
+        .catch((err) => {
+          console.error(err);
+          res.status(500).send('Error: ' + err);
+        });
+    });
 
 app.get('/movies/genres/:genreName', (req, res) => {
-    const { genreName } = req.params;
-    const genre = movies.find(movie => movie.genres.name === genreName).genres;
-
-    if (genre) {
-        res.status(200).json(genre); 
-    } else {
-        res.status(404).send('Could not find that genre.');
-    }
+    Movies.find({ 'Genre.Name': req.params.genreName })
+        .then((movies) => {
+            res.status(200).json(movies);
+        })
+        .catch((err) => {
+            res.status(500).send('Error: ' + err);
+        });
 });
 
 app.get('/movies/directors/:directorName', (req, res) => {
-    const { directorName } = req.params;
-    const director = movies.find(movie => movie.directors.name === directorName).directors;
-
-    if (director) {
-        res.status(200).json(director); 
-    } else {
-        res.status(404).send('Could not find that genre.');
-    }
+    Movies.find({ 'Director.Name': req.params.directorName })
+        .then((movies) => {
+            res.status(200).json(movies);
+        })
+        .catch((err) => {
+            res.status(500).send('Error: ' + err);
+        });
 });
 
-app.delete('/users/:id', (req, res) => {
-    const { id } = req.params;
-
-    let user = users.find(user => user.id == id);
-
-    if (user) {
-        users = users.filter(user => user.id != id);
-        res.status(200).send(`User ${id} has been deleted`);
-    } else {
-        res.status(404).send('User not found.')
-    }
-}); 
-
-app.post('/users', (req, res) => {
-    const newUser = req.body;
-
-    if (newUser.name) {
-        newUser.id = uuid.v4();
-        users.push(newUser);
-        res.status(201).json(newUser);
-    } else {
-        res.status(400).send('Name field required.');
-    }
+app.delete('/users/:id/:movieTitle', (req, res) => {
+    Movies.findOneAndRemove({ Title: req.params.movieTitle }).then((movies) => {
+      if (!movies) {
+        res.status(400).send(req.params.movieTitle + 'was not found');
+      } else {
+        res.status(200).send(req.params.movieTitle + ' was deleted');
+      }
+    });
 });
 
-app.put('/users/:id', (req, res) => {
-    const { id } = req.params;
-    const updatedUser = req.body;
+app.post('/users', async (req, res) => {
+    Users.findOne({ Username: req.body.userName }).then((user) => {
+        if (user) {
+          return res.status(400).send(req.body.userName + 'already exists');
+        } else {
+          Users.create({
+            Username: req.body.Username,
+            Password: req.body.Password,
+            Email: req.body.Email,
+            Birthday: req.body.Birthday
+          })
+            .then((user) => {
+              res.status(201).json(user);
+            })
+              
+            .catch((error) => {
+              console.error(error);
+              res.status(500).send('Error: ' + error);
+            });
+        }
+      });
+    });
 
-    let user = users.find(user => user.id == id);
-
-    if (user) {
-        user.name = updatedUser.name;
-        res.status(200).json(user);
-    } else {
-        res.status(400).send('User not found.')
-    }
-}); 
-
+app.put('/users/:userName', (req, res) => {
+    Users.findOneAndUpdate(
+      { Username: req.params.userName },
+      {
+        $set: {
+          Username: req.body.Username,
+          Password: req.body.Password,
+          Email: req.body.Email,
+          Birthday: req.body.Birthday
+        }
+      },
+      { new: true },
+      (err, updatedUser) => {
+        if (err) {
+          console.error(err);
+          res.status(500).send('Error: ' + err);
+        } else {
+          res.json(updatedUser);
+        }
+      }
+    );
+  });
 app.get('/movies', (req, res) => {
-    res.status(200).json(movies);
-});
+    Movies.find()
+      .then((movies) => {
+        res.status(200).json(movies);
+      })
+      .catch((err) => {
+        console.error(err);
+        res.status(500).send('Error: ' + err);
+      });
+  });
 
 app.get('/', (req, res) => {
     res.send('Thank you!');
