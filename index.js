@@ -14,6 +14,11 @@ app.use(express.json());
 const morgan = require('morgan');
 
 app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
+
+let auth = require('./auth')(app);
+const passport = require('passport');
+require('./passport');
 
 let users = [
   {
@@ -210,10 +215,10 @@ await Users.findOne({ username: req.body.username })
     } else {
       Users
         .create({
-          Username: req.body.Username,
-          Password: req.body.Password,
-          Email: req.body.Email,
-          Birthday: req.body.Birthday
+          username: req.body.username,
+          password: req.body.password,
+          email: req.body.email,
+          birthday: req.body.birthday
         })
         .then((users) =>{res.status(201).json(users); })
       .catch((error) => {
@@ -229,7 +234,7 @@ await Users.findOne({ username: req.body.username })
 });
 
 //gets a JSON object of all the current movies on the server
-app.get('/movies', (req, res) => {
+app.get('/movies', passport.authenticate('jwt', { session: false }), async (req, res) => {
   Movies.find()
     .then((movies) => {
       res.status(200).json(movies);
