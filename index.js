@@ -211,7 +211,7 @@ app.post('/users', async (req, res) => {
 await Users.findOne({ username: req.body.username })
   .then((user) => {
     if (user) {
-      return res.status(400).send(req.body.username + 'already exists');
+      return res.status(400).send(req.body.username + ' already exists');
     } else {
       Users
         .create({
@@ -258,8 +258,8 @@ Movies.findOne({ title: req.params.title })
 });
 
 //Search for movies by genre
-app.get('/movies/genres/:genreName', (req, res) => {
-  Movies.find({ 'genre.name': req.params.genreName })
+app.get('/movies/genres/:genrename', (req, res) => {
+  Movies.find({ 'genre.name': req.params.genrename })
     .then((movies) => {
       res.status(200).json(movies);
     })
@@ -269,8 +269,8 @@ app.get('/movies/genres/:genreName', (req, res) => {
 });
 
 //Search for movies by director
-app.get('/movies/directors/:directorsName', (req, res) => {
-  Movies.find({ 'director.name': req.params.directorsName })
+app.get('/movies/directors/:directorsname', (req, res) => {
+  Movies.find({ 'director.name': req.params.directorsname })
     .then((movies) => {
       res.status(200).json(movies);
     })
@@ -280,9 +280,9 @@ app.get('/movies/directors/:directorsName', (req, res) => {
 });
 
 // Add a movie to a user's list of favorites
-app.post('/users/:username/movies/:MovieID', async (req, res) => {
-  await Users.findOneAndUpdate({ username: req.params.userName }, {
-     $push: { FavoriteMovies: req.params.MovieID }
+app.post('/users/:username/movies/:movieid', async (req, res) => {
+  await Users.findOneAndUpdate({ username: req.params.username }, {
+     $push: { FavoriteMovies: req.params.movieid }
    },
    { new: true }) // This line makes sure that the updated document is returned
   .then((updatedUser) => {
@@ -295,8 +295,8 @@ app.post('/users/:username/movies/:MovieID', async (req, res) => {
 });
 
 //Allow users to delete movies from their favorites
-app.delete('/users/:username/:movieTitle', (req, res) => {
-  Movies.findOneAndRemove({ title: req.params.movieTitle }).then((movies) => {
+app.delete('/users/:username/:movietitle', (req, res) => {
+  Movies.findOneAndRemove({ title: req.params.movietitle }).then((movies) => {
     if (!movies) {
       res.status(400).send(req.params.movieTitle + 'was not found');
     } else {
@@ -309,10 +309,10 @@ app.delete('/users/:username/:movieTitle', (req, res) => {
   app.put('/users/:username', async (req, res) => {
       await Users.findOneAndUpdate({ username: req.params.username }, { $set:
         {
-          Username: req.body.Username,
-          Password: req.body.Password,
-          Email: req.body.Email,
-          Birthday: req.body.Birthday
+          username: req.body.username,
+          password: req.body.password,
+          email: req.body.email,
+          birthday: req.body.birthday
         }
       },
       { new: true }) // This line makes sure that the updated document is returned
