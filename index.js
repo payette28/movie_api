@@ -215,10 +215,10 @@ await Users.findOne({ username: req.body.username })
     } else {
       Users
         .create({
-          Username: req.body.username,
-          Password: req.body.password,
-          Email: req.body.email,
-          Birthday: req.body.birthday
+          username: req.body.username,
+          password: req.body.password,
+          email: req.body.email,
+          birthday: req.body.birthday
         })
         .then((users) =>{res.status(201).json(users); })
       .catch((error) => {
