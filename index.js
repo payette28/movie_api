@@ -16,10 +16,14 @@ const morgan = require('morgan');
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
+const cors = require('cors');
+app.use(cors());
+
 let auth = require('./auth')(app);
 const passport = require('passport');
 require('./passport');
 
+const { check, validationResult } = require('express-validator');
 let users = [
   {
     id: 1,
@@ -207,7 +211,27 @@ app.get('/users/:username', passport.authenticate('jwt', { session: false }), as
 });
 
 //Add a user
-app.post('/users', async (req, res) => {
+app.post('/users', 
+// Validation logic here for request
+  //you can either use a chain of methods like .not().isEmpty()
+  //which means "opposite of isEmpty" in plain english "is not empty"
+  //or use .isLength({min: 5}) which means
+  //minimum value of 5 characters are only allowed
+  [
+    check('username', 'username is required').isLength({min: 5}),
+    check('username', 'username contains non alphanumeric characters - not allowed.').isAlphanumeric(),
+    check('password', 'password is required').not().isEmpty(),
+    check('email', 'email does not appear to be valid').isEmail()
+  ], async (req, res) => {
+
+  // check the validation object for errors
+    let errors = validationResult(req);
+
+    if (!errors.isEmpty()) {
+      return res.status(422).json({ errors: errors.array() });
+    }
+
+    let hashedPassword = Users.hashPassword(req.body.password);
 await Users.findOne({ username: req.body.username })
   .then((user) => {
     if (user) {
@@ -216,7 +240,7 @@ await Users.findOne({ username: req.body.username })
       Users
         .create({
           username: req.body.username,
-          password: req.body.password,
+          password: hashedPassword,
           email: req.body.email,
           birthday: req.body.birthday
         })
@@ -306,16 +330,27 @@ app.delete('/users/:username/:movietitle', passport.authenticate('jwt', { sessio
 });
 
 // Update a user's info, by username
-  app.put('/users/:username', passport.authenticate('jwt', { session: false }), async (req, res) => {
-    // CONDITION TO CHECK ADDED HERE
-    if(req.user.username !== req.params.username){
-      return res.status(400).send('Permission denied');
+  app.put('/users/:username',
+  [
+    check('username', 'username is required').isLength({min: 5}),
+    check('username', 'username contains non alphanumeric characters - not allowed.').isAlphanumeric(),
+    check('password', 'password is required').not().isEmpty(),
+    check('email', 'email does not appear to be valid').isEmail()
+  ], async (req, res) => {
+
+  // check the validation object for errors
+    let errors = validationResult(req);
+
+    if (!errors.isEmpty()) {
+      return res.status(422).json({ errors: errors.array() });
     }
-    // CONDITION END
+
+    let hashedPassword = Users.hashPassword(req.body.password);
+
       await Users.findOneAndUpdate({ username: req.params.username }, { $set:
         {
           username: req.body.username,
-          password: req.body.password,
+          password: req.hashedPassword,
           email: req.body.email,
           birthday: req.body.birthday
         }
