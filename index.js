@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 const Models = require('./models.js');
-mongoose.connect('mongodb://127.0.0.1:27017/cfDB', { useNewUrlParser: true, useUnifiedTopology: true });
+// mongoose.connect('mongodb://127.0.0.1:27017/cfDB', { useNewUrlParser: true, useUnifiedTopology: true });
+mongoose.connect( process.env.CONNECTION_URI, { useNewUrlParser: true, useUnifiedTopology: true });
 const Movies = Models.Movie;
 const Users = Models.User;
 
