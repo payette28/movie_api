@@ -98,7 +98,7 @@ await Users.findOne({ username: req.body.username })
 });
 
 //gets a JSON object of all the current movies on the server
-app.get('/movies', async (req, res) => {
+app.get('/movies', passport.authenticate('jwt', { session: false }), async (req, res) => {
   Movies.find()
     .then((movies) => {
       res.status(200).json(movies);
